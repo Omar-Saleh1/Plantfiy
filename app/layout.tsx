@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { ChevronDown, Leaf, User } from "lucide-react";
 import Link from "next/link";
 import Home from "./page";
+import Nav from "./(Authintiaction)/components/Navbar/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#fbfbfb] text-zinc-900`}
-      >
-       {/* <Home/> */}
-        {children}
-        <Toaster />
+      > <Nav/>
+          {children}
+          <Toaster />
       </body>
     </html>
   );
