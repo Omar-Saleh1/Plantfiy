@@ -1,0 +1,10 @@
+Non-JSON: 404\n<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PUT /api/v1/cart/items/69c47513bc2fd0616f9a65d6</pre>
+</body>
+</html>

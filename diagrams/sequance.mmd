@@ -1,0 +1,26 @@
+sequenceDiagram
+    actor U as المستخدم
+    participant UI as واجهة النظام
+    participant B as الخادم
+    participant AI as الذكاء الاصطناعي
+    participant DB as قاعدة البيانات
+
+    U->>UI: يرفع صورة النبات للتشخيص
+    activate UI
+    UI->>UI: التحقق من الصورة
+    UI->>B: يرسل طلب تشخيص
+    activate B
+    B->>AI: يرسل الصورة للتحليل
+    activate AI
+    AI-->>AI: معالجة واكتشاف الأمراض
+    AI-->>B: يُرجع المرض والعلاج
+    deactivate AI
+    B->>DB: يحفظ نتيجة التشخيص
+    activate DB
+    DB-->>B: تأكيد الحفظ
+    deactivate DB
+    B-->>UI: يرسل استجابة بالنتيجة
+    deactivate B
+    UI-->>UI: تنسيق النتيجة
+    UI-->>U: يعرض للمستخدم نتيجة التشخيص
+    deactivate UI

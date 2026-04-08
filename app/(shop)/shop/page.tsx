@@ -1,6 +1,6 @@
-import { ShoppingCart, Truck } from "lucide-react";
+import { Truck } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
+import AddToCartButton from "./CartButtons";
 
 interface Product {
   _id?: string;
@@ -12,21 +12,23 @@ interface Product {
   isPlant: boolean;
 }
 
-async function getProducts():Promise<Product[]>{
+async function getProducts(): Promise<Product[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/products`, {
       cache: "no-store",
-      method:"GET",
-      headers:{
-        "Content-Type":"application/json",
-      }
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+
+    
     });
     if (!res.ok) {
-        throw new Error("Failed to fetch products");
+      throw new Error("Failed to fetch products");
     }
-    
+
     const responseData = await res.json();
-    // The API wraps the response in a `data` object which contains a `products` array
     return responseData?.data?.products || [];
   } catch (error: any) {
     console.error("Error fetching products:", error);
@@ -42,7 +44,7 @@ export default async function Shop() {
   return (
     <div className="bg-[#f0f3f1] min-h-screen py-12 px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 lg:gap-16">
-        
+
         {/* Sidebar Filters */}
         <aside className="w-full md:w-64 shrink-0 flex flex-col gap-10">
           <div>
@@ -97,12 +99,12 @@ export default async function Shop() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product, idx) => (
               <div key={product._id || idx} className="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col border border-zinc-100/50">
-                
+
                 {/* Product Image */}
                 <div className="relative aspect-[4/5] w-full bg-[#f8f9f8] flex-shrink-0">
                   <img
                     src={product.imageUrl}
-                    alt={product.name }
+                    alt={product.name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute right-4 top-4 bg-white px-3 py-1.5 rounded-full text-sm font-extrabold text-zinc-900 shadow-sm leading-none flex items-center justify-center">
@@ -119,10 +121,7 @@ export default async function Shop() {
                     {product.description}
                   </p>
 
-                  <button className="w-full flex items-center justify-center gap-2 bg-[#0d2a1a] hover:bg-[#1a3826] text-white py-3.5 rounded-full text-sm font-bold transition-all mt-auto shadow-sm active:scale-[0.98]">
-                    <ShoppingCart className="w-4 h-4" />
-                    Add to Cart
-                  </button>
+                  <AddToCartButton productId={product._id ?? (product as { id?: string }).id ?? ""} />
                 </div>
 
               </div>

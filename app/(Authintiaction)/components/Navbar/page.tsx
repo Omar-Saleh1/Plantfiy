@@ -27,7 +27,9 @@ export default function Nav() {
             </li>
             <li>
               <button className="flex items-center gap-1 text-sm font-medium text-zinc-600 hover:text-[#2d5f3f]">
-                Articles <ChevronDown className="w-4 h-4" />
+              <Link href={'/forum'}>
+              Articles
+              </Link>   <ChevronDown className="w-4 h-4" />
               </button>
             </li>
             <li>

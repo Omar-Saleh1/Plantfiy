@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ChevronDown, Leaf, User } from "lucide-react";
-import Link from "next/link";
-import Home from "./page";
 import Nav from "./(Authintiaction)/components/Navbar/page";
 
 const geistSans = Geist({

@@ -35,31 +35,54 @@ export default function Login() {
     },
   });
 
-  async function handleLogin(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/login`, {
+ async function handleLogin(values: z.infer<typeof formSchema>) {
+  setLoading(true);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/v1/auth/login`, {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success(data.message || "Login successful!");
+
+      const d = data as Record<string, unknown>;
+      const inner = d.data && typeof d.data === "object" ? (d.data as Record<string, unknown>) : undefined;
+      const pick = (o: Record<string, unknown> | undefined) =>
+        o && (o.accessToken ?? o.token ?? o.access_token);
+      const raw = pick(inner) ?? pick(d);
+      const accessToken = typeof raw === "string" && raw.length > 0 ? raw : undefined;
+
+      if (!accessToken) {
+        toast.error("Login succeeded but no access token was returned.");
+        return;
+      }
+
+      const save = await fetch("/api/set-token", {
         method: "POST",
-        body: JSON.stringify(values),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: accessToken }),
+        credentials: "include",
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(data.message || "Registered successfully!");
-        console.log(data);
-        
-        router.push("/");
-      } else {
-        toast.error(data?.message || "Registration failed.");
+      if (!save.ok) {
+        toast.error("Could not save session. Try again.");
+        return;
       }
-    } catch {
-      toast.error("Server error. Try again later.");
-    } finally {
-      setLoading(false);
+
+      router.push("/");
+    } else {
+      toast.error(data?.message || "Login failed.");
     }
+  } catch {
+    toast.error("Server error. Try again later.");
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
    <div className="flex justify-center items-center min-h-screen bg-[#f8f9fa] p-4 font-sans">
